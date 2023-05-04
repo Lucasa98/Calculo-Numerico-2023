@@ -1,4 +1,6 @@
-function [x,it,r]=Jacobi(A,b,x0,tolerancia,maxit)
+function [x,it,r,t]=Jacobi(A,b,x0,tolerancia,maxit)
+  tic();
+
   n=length(A(1,:));
 
   x=x0;
@@ -18,4 +20,5 @@ function [x,it,r]=Jacobi(A,b,x0,tolerancia,maxit)
     it=it+1;
   endwhile
 
+  t = toc();
 endfunction

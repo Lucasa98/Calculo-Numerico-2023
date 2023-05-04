@@ -13,8 +13,10 @@ function [x,it,r,t] = GaussSeidel (A,b,x0,tolerancia,maxit)
     endfor
 
     %error relativo:
-    %  norm(x-x0)/norm(x);
-    r(it+1) = norm(A*x-b);
+    %   norm(x-x0)/norm(x);
+    %error absoluto:
+    %   norm(A*x-b);
+    r(it+1) = norm(x-x0)/norm(x);
     if r(it+1) < tolerancia
       break;
     endif
