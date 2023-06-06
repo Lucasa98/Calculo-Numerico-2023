@@ -88,3 +88,45 @@ endfor
 grid on;
 h=legend("S(t)=(x(t),y(t))");
 legend(h,"location","southeast");
+
+% b) Evaluacion
+
+
+
+% c) Integración
+tolerancia = 1e-5;
+maxit = 10;
+
+integrando = @(t) sqrt(pow2(dx(t)) + pow2(dy(t)));
+
+figure(4);
+t = linspace(0,6,100);
+plot(t,integrando(t));
+
+  % Trapecio
+I0 = intNCcompuesta(integrando,0,6,1,2);
+for itTrap=1:maxit
+  I1 = intNCcompuesta(integrando,0,6,2^itTrap,2);
+
+  if abs(I1-I0) < tolerancia
+    I0 = I1;
+    itTrap
+    break;
+  endif
+
+  I0 = I1
+endfor
+
+  % Simpson
+I0 = intNCcompuesta(integrando,0,6,1,3);
+for itSimp=1:maxit
+  I1 = intNCcompuesta(integrando,0,6,2^itTrap,3);
+
+  if abs(I1-I0) < tolerancia
+    I0 = I1;
+    itSimp
+    break;
+  endif
+
+  I0 = I1
+endfor
