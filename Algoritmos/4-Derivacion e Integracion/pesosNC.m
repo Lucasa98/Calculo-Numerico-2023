@@ -7,6 +7,6 @@ function w = pesosNC(n)
     for i=2:n
     A(i,:) = A(i-1,:) .* x;
     end
-    b = 1./(1:n)’;
+    b = 1./(1:n)';
     w = A\b;
 endfunction
