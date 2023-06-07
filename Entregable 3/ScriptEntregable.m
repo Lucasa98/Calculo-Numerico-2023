@@ -7,6 +7,9 @@ posx = [2.0 1.5 0.5 0.0]; %valor en x
 ty = [0 1 2 3 4 5 6];
 posy = [0.0 1.0 0.0 -1.0 0.0 1.0 0.0];
 
+a=0;
+b=6;
+
 dy0 = pi/2;
 dyn = -pi/2;
 
@@ -98,10 +101,51 @@ vel3 = [dx(3),dy(3)]
 % c) Integración
 integrando = @(t) sqrt(pow2(dx(t)) + pow2(dy(t)));
 
+  % Grafica del integrando con los polinomios interpolantes por subintervalo
 figure(4);
-t = linspace(0,6,100);
+t = linspace(0.0001,6,100);
 plot(t,integrando(t));
+hold on;
 
+%SACARRRRRR
+a=0.001;
+
+h = (b-a)/8;
+    % n=2 (Trapecio)
+for i=1:8
+  p = linspace(a+(i-1)*h,a+i*h,2);
+  fp = integrando(p);
+  P = PolyLag(p,fp);
+  t = linspace(a+(i-1)*h,a+i*h,50);
+  plot(t,polyval(P,t),'-m');
+endfor
+    % n=3 (Simpson)
+for i=1:8
+  p = linspace(a+(i-1)*h,a+i*h,3);
+  fp = integrando(p);
+  P = PolyLag(p,fp);
+  t = linspace(a+(i-1)*h,a+i*h,50);
+  plot(t,polyval(P,t),'-b');
+endfor
+    % n=4
+for i=1:8
+  p = linspace(a+(i-1)*h,a+i*h,4);
+  fp = integrando(p);
+  P = PolyLag(p,fp);
+  t = linspace(a+(i-1)*h,a+i*h,50);
+  plot(t,polyval(P,t),'-g');
+endfor
+    % n=5
+for i=1:8
+  p = linspace(a+(i-1)*h,a+i*h,5);
+  fp = integrando(p);
+  P = PolyLag(p,fp);
+  t = linspace(a+(i-1)*h,a+i*h,50);
+  plot(t,polyval(P,t),'-y');
+endfor
+legend('integrando','NC orden 1','NC orden 2','NC orden 3','NC orden 4');
+
+% Calculo de la integral
 tolerancia = 1e-6;
 maxit = 30;
 
@@ -128,6 +172,30 @@ INC5
 itNC5
 tNC5
 LNC5
+
+[IG2,itG2,rG2,tG2,LG2] = intGauss(integrando,0,6,2,tolerancia,maxit);
+IG2
+itG2
+tG2
+LG2
+
+[IG3,itG3,rG3,tG3,LG3] = intGauss(integrando,0,6,3,tolerancia,maxit);
+IG3
+itG3
+tG3
+LG3
+
+[IG4,itG4,rG4,tG4,LG4] = intGauss(integrando,0,6,4,tolerancia,maxit);
+IG4
+itG4
+tG4
+LG4
+
+[IG5,itG5,rG5,tG5,LG5] = intGauss(integrando,0,6,5,tolerancia,maxit);
+IG5
+itG5
+tG5
+LG5
 
 % Graficar residuos
 figure(5);

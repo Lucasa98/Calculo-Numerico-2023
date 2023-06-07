@@ -8,7 +8,6 @@ function [I,it,r,t,L] = intNC(f,a,b,n,tolerancia,maxit)
   % calculamos los pesos una sola vez
   w = pesosNC(n);
 
-  % duplicamos los subintervalos
   L=1;
   h = b-a;
   y = linspace(a,b,L+1);
