@@ -12,7 +12,7 @@ dyn = -pi/2;
 
 % - a) Interpolacion
 [x,dx] = funcion_spline(tx,posx,0,0);   %velocidad inicial y final nulas en x
-[y,dy] = funcion_spline(ty,posy,dy0,dyn);
+[y,dy] = funcion_spline(ty,posy,pi/2,-pi/2);
 
 % - b) Grafica
   % x(t) y dx(t)
@@ -90,43 +90,52 @@ h=legend("S(t)=(x(t),y(t))");
 legend(h,"location","southeast");
 
 % b) Evaluacion
-
-
+% S(3)
+pos3 = [x(3),y(3)]
+% dS(3)
+vel3 = [dx(3),dy(3)]
 
 % c) Integración
-tolerancia = 1e-5;
-maxit = 10;
-
 integrando = @(t) sqrt(pow2(dx(t)) + pow2(dy(t)));
 
 figure(4);
 t = linspace(0,6,100);
 plot(t,integrando(t));
 
-  % Trapecio
-I0 = intNCcompuesta(integrando,0,6,1,2);
-for itTrap=1:maxit
-  I1 = intNCcompuesta(integrando,0,6,2^itTrap,2);
+tolerancia = 1e-6;
+maxit = 30;
 
-  if abs(I1-I0) < tolerancia
-    I0 = I1;
-    itTrap
-    break;
-  endif
+[INC2,itNC2,rNC2,tNC2,LNC2] = intNC(integrando,0,6,2,tolerancia,maxit);
+INC2
+itNC2
+tNC2
+LNC2
 
-  I0 = I1
-endfor
+[INC3,itNC3,rNC3,tNC3,LNC3] = intNC(integrando,0,6,3,tolerancia,maxit);
+INC3
+itNC3
+tNC3
+LNC3
 
-  % Simpson
-I0 = intNCcompuesta(integrando,0,6,1,3);
-for itSimp=1:maxit
-  I1 = intNCcompuesta(integrando,0,6,2^itTrap,3);
+[INC4,itNC4,rNC4,tNC4,LNC4] = intNC(integrando,0,6,4,tolerancia,maxit);
+INC4
+itNC4
+tNC4
+LNC4
 
-  if abs(I1-I0) < tolerancia
-    I0 = I1;
-    itSimp
-    break;
-  endif
+[INC5,itNC5,rNC5,tNC5,LNC5] = intNC(integrando,0,6,5,tolerancia,maxit);
+INC5
+itNC5
+tNC5
+LNC5
 
-  I0 = I1
-endfor
+% Graficar residuos
+figure(5);
+semilogy(rNC2);
+hold on;
+semilogy(rNC3);
+semilogy(rNC4);
+semilogy(rNC5);
+legend('ResNC2', 'ResNC3', 'ResNC4', 'ResNC5');
+xlabel('iteraciones');
+ylabel('error absoluto');
