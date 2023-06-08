@@ -26,7 +26,6 @@ function [P] = PolyLag (x,y)
         div = div*(x(i)-x(j));
       endif
     endfor
-    div
     P = P + Laux * (y(i)/div);
   endfor
 

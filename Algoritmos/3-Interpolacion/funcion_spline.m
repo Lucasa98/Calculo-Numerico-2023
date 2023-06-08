@@ -1,9 +1,9 @@
 function [S,dS]=funcion_spline(x1,y1,df1=0,df2=0)
 
     % extremos sujetos
-    %[a,b,c,d] = cubic_spline_clamped(x1,y1,df1,df2);
+    [a,b,c,d] = cubic_spline_clamped(x1,y1,df1,df2);
     % extremos libres
-    [a,b,c,d] = cubic_spline_natural(x1,y1);
+    %[a,b,c,d] = cubic_spline_natural(x1,y1);
 
     S=@(x) a(1)*(x==x1(1));
 
