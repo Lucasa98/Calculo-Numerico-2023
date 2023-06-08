@@ -99,16 +99,13 @@ pos3 = [x(3),y(3)]
 vel3 = [dx(3),dy(3)]
 
 % c) Integración
-integrando = @(t) sqrt(pow2(dx(t)) + pow2(dy(t)));
+integrando = @(t) sqrt(dx(t).^2 + dy(t).^2);
 
   % Grafica del integrando con los polinomios interpolantes por subintervalo
 figure(4);
 t = linspace(0.0001,6,100);
-plot(t,integrando(t));
+plot(t,integrando(t),'linewidth',2);
 hold on;
-
-%SACARRRRRR
-a=0.001;
 
 h = (b-a)/8;
     % n=2 (Trapecio)
@@ -146,7 +143,7 @@ endfor
 legend('integrando','NC orden 1','NC orden 2','NC orden 3','NC orden 4');
 
 % Calculo de la integral
-tolerancia = 1e-6;
+tolerancia = 1e-7;
 maxit = 30;
 
 [INC2,itNC2,rNC2,tNC2,LNC2] = intNC(integrando,0,6,2,tolerancia,maxit);
@@ -173,6 +170,13 @@ itNC5
 tNC5
 LNC5
 
+[INC20,itNC20,rNC20,tNC20,LNC20] = intNC(integrando,0,6,20,tolerancia,maxit);
+INC20
+itNC20
+tNC20
+LNC20
+disp("===================================");
+
 [IG2,itG2,rG2,tG2,LG2] = intGauss(integrando,0,6,2,tolerancia,maxit);
 IG2
 itG2
@@ -197,6 +201,12 @@ itG5
 tG5
 LG5
 
+[IG20,itG20,rG20,tG20,LG20] = intGauss(integrando,0,6,20,tolerancia,maxit);
+IG20
+itG20
+tG20
+LG20
+
 % Graficar residuos
 figure(5);
 semilogy(rNC2);
@@ -204,6 +214,12 @@ hold on;
 semilogy(rNC3);
 semilogy(rNC4);
 semilogy(rNC5);
-legend('ResNC2', 'ResNC3', 'ResNC4', 'ResNC5');
+semilogy(rNC20,'color','r','linestyle','--');
+semilogy(rG2,'linewidth',2);
+semilogy(rG3,'linewidth',2);
+semilogy(rG4,'linewidth',2);
+semilogy(rG5,'linewidth',2);
+semilogy(rG20,'color','r','linestyle','--');
+legend('ResNC2', 'ResNC3', 'ResNC4', 'ResNC5', 'ResNC20', 'ResG2', 'ResG3', 'ResG4', 'ResG5', 'ResG20');
 xlabel('iteraciones');
 ylabel('error absoluto');
