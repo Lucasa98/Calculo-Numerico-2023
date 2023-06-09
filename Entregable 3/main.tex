@@ -77,43 +77,44 @@
         S_x(t)=
         \begin{cases}
             a_0 + b_0t + c_0t^2 + d_0t^3 & t_0 \leq t \leq t_1 \\
-            a_1 + b_1t + c_1t^2 + d_1t^3 & t_1 < t \leq t_2 \\
+            a_1 + b_1(t-t_1) + c_1(t-t_1)^2 + d_1(t_1)^3 & t_1 < t \leq t_2 \\
             .\\
             .\\
             .\\
-            a_{n-1} + b_{n-1}t + c_{n-1}t^2 + d_{n-1}t^3 & t_{n-1} < t \leq t_n
+            a_{n-1} + b_{n-1}?(t-t_{n-1}) + c_{n-1}(t_{n-1})^2 + d_{n-1}(t_{n-1})^3 & t_{n-1} < t \leq t_n
         \end{cases}
     \end{equation*}
+    \indent Donde los coeficientes calculados a partir de las condiciones dadas anteriormente son mostrados en las tablas\\
     \indent Vemos que además es fácilmente calculable su derivada, la cual usaremos para calcular la distancia más adelante.
-    \\\\
-    \indent Extendiendo la tabla anterior, podemos visualizar toda la información de la siguiente forma:\\
     \begin{table}[h]
         \centering
-        \begin{tabular}{|c|c|c|c|c|}
+        \begin{tabular}{|l|l|l|l|l|}
             \hline
-            t[s] & Posición x[cm] & Posición y[cm] & Velocidad x'[cm/s] & Velocidad y'[cm/s] \\
-            \hline
-            0 & 2.0 & 0.0 & 0.0 & \(\frac{\pi}{2}\) \\
-            \hline
-            1 & - & 1.0 & - & -\\
-            \hline
-            2 & 1.5 & 0.0 & - & -\\
-            \hline
-            3 & - & -1.0 & - & -\\
-            \hline
-            4 & 0.5 & 0.0 & - & -\\
-            \hline
-            5 & - & 1.0 & - & -\\
-            \hline
-            6 & 0.0 & 0.0 & 0.0 & \(-\frac{\pi}{2}\) \\
-            \hline
+            \multicolumn{1}{|c|}{\textbf{Intervalo}} & \multicolumn{1}{c|}{\textbf{ax}} & \multicolumn{1}{c|}{\textbf{bx}} & \textbf{cy} & \textbf{dx} \\ \hline
+            {[}0,2{]}                                & 2                                  & 0                                  & -0.15         & 0.0125        \\ \hline
+            {[}2,4{]}                                & 1.5                                & -0.45                              & -0.075        & 0.025         \\ \hline
+            {[}4,6{]}                                & 0.5                                & -0.45                              & 0.075         & 0.0125        \\ \hline
         \end{tabular}
-        \caption{Valores sensados.}
+        \caption{Coeficientes de la Spline interpolante de x}
+        \label{Tabla}
+    \end{table}
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{|l|l|l|l|l|}
+            \hline
+            \multicolumn{1}{|c|}{\textbf{Intervalo}} & \multicolumn{1}{c|}{\textbf{ay}} & \multicolumn{1}{c|}{\textbf{by}} & \textbf{cy} & \textbf{dy} \\ \hline
+            {[}0,1{]}                                & 0                                  & 1.57079                            & -0.12271      & -0.44808      \\ \hline
+            {[}1,2{]}                                & 1                                  & -0.01887                           & -1.46696      & 0.48584       \\ \hline
+            {[}2,3{]}                                & 0                                  & -1.49528                           & -0.00943      & 0.50471       \\ \hline
+            {[}3,4{]}                                & -1                                 & 0                                  & 1.50471       & -0.50471      \\ \hline
+            {[}4,5{]}                                & 0                                  & 1.49528                            & -0.00943      & -0.48584      \\ \hline
+            {[}5,6{]}                                & 1                                  & 0.01887                            & -1.46696      & 0.44808       \\ \hline
+        \end{tabular}
+        \caption{Coeficientes de la Spline interpolante de y}
         \label{Tabla}
     \end{table}
 
-    \indent A partir de estos datos, utilizando la función \(funcion\_spline\), obtendremos la función correspondiente al Spline Cúbico tanto de \(x(t)\) e \(y(t)\) como de sus primeras derivadas, los cuales nos servirán para graficar la trayectoria de la partícula y evaluar su posición y velocidad.
-    \indent Evaluando su posición y vector velocidad a los 3 segundos \((t=3 s))\) obtenemos\\
+    \indent A partir de estos datos, utilizando la función \(funcion\_spline\), obtendremos la función correspondiente al Spline Cúbico tanto de \(x(t)\) e \(y(t)\) como de sus primeras derivadas, los cuales nos servirán para graficar la trayectoria de la partícula y evaluar su posición y velocidad a los 3 segundos.
     \begin{equation*}
         P(3) = (1; -0.9999999999999999), \\
         \indent v(3) = (-0.525; 2.220446049250313*10^{-16})
@@ -145,7 +146,7 @@
     Para calcular la distancia recorrida por la partícula en los \(6 segundos\) utilizaremos el método de fórmulas de Newton-Cotes y el método de Cuadraturas de Gauss con polinomios de Legendre.\\
     \indent El primero consiste en tomar \(n+1\) nodos \(x_i=x_0+ih\) para \(i=0,1,...,n\) donde \(x_0=a\), \(x_n=b\) y \(h=(b-a)/n\) equidistantes dentro del intervalo y construir un polinomio de Lagrange a partir de estos nodos, para luego aproximar la integral a partir de la integral de este polinomio en el intervalo.\\
     \indent El método de Cuadraturas de Gauss con Polinomios se basa en polinomios ortogonales, en este caso específico los de Legendre, los cuales están definidos en el dominio \([-1,1]\). El mismo encuentra tanto los puntos como los pesos para la evaluación en esos puntos que generen la mejor aproximación. Para los primero, utiliza las raíces de los polinomios ortogonales, y los pesos son determinados a partir de propiedades de los mismos.\\
-    \indent Si dividimos el intervalo en L subintervalos y aplicamos estos métodos en cada uno de ellos, podemos obtener una mejor aproximación. Veremos cuántos subintervalos se requieren para lograr 6 dígitos exactos en la integral, empezando desde \(L=1\) intervalos y duplicando en cada iteración, hasta que la diferencia absoluta con la iteración anterior sea menor a \(1*10^{-7}\)\\\\\\\\
+    \indent Si dividimos el intervalo en L subintervalos y aplicamos estos métodos en cada uno de ellos, podemos obtener una mejor aproximación. Veremos cuántos subintervalos se requieren para lograr 6 dígitos exactos en la integral, empezando desde \(L=1\) intervalos y duplicando en cada iteración, hasta que la diferencia absoluta con la iteración anterior sea menor a \(1*10^{-6}\)\\\\\\\\
     \begin{figure}[h]
         \centering
         \begin{subfigure}{0.49\textwidth}
@@ -160,22 +161,22 @@
         \caption{Gráficas de los polinomios interpolantes de Newton-Cotes en 8 tramos (\subref{fig:3a}) y la curva del error desde \(L=2\) (\subref{fig:3b}).}
         \label{fig3}
     \end{figure}
-    \indent A partir de estos métodos estimamos una distancia recorrida por la partícula de \(\int_{0}^{T} \sqrt{x_1'(t)^2+x_2'(t)^2}dt=\textbf{6.514997}\)
+    \indent A partir de estos métodos estimamos una distancia recorrida por la partícula (con seis dígitos exactos) de \(\int_{0}^{T} \sqrt{x_1'(t)^2+x_2'(t)^2}dt=\textbf{6.51499}\)
     \begin{table}[h]
         \centering
         \begin{tabular}{|l|l|l|}
             \hline
             \textbf{Método} & \textbf{tiempo{[}s{]}} & \textbf{L} \\ \hline
-            NC n=2          & 124.7712018489838      & 67108864   \\ \hline
-            NC n=3          & 43.19980502128601      & 16777216   \\ \hline
-            NC n=4          & 57.75703001022339      & 16777216   \\ \hline
-            NC n=5          & 35.19215083122253      & 8388608    \\ \hline
-            NC n=20         & 36.19845604896545      & 2097152    \\ \hline
-            Gauss-L n=2     & 0.6471190452575684     & 256        \\ \hline
-            Gauss-L n=3     & 0.6503341197967529     & 256        \\ \hline
-            Gauss-L n=4     & 0.6206791400909424     & 256        \\ \hline
-            Gauss-L n=5     & 0.6107208728790283     & 256        \\ \hline
-            Gauss-L n=20    & 0.1515882015228271     & 64         \\ \hline
+            NC n=2          & 45.34706783294678      & 8388608   \\ \hline
+            NC n=3          & 16.92670297622681      & 2097152   \\ \hline
+            NC n=4          & 22.4292459487915       & 2097152   \\ \hline
+            NC n=5          & 14.13392615318298      & 1048576    \\ \hline
+            NC n=30         & 10.41877818107605      & 131072    \\ \hline
+            Gauss-L n=2     & 2.973474025726318      & 256        \\ \hline
+            Gauss-L n=3     & 2.928060054779053      & 256        \\ \hline
+            Gauss-L n=4     & 1.54735803604126       & 128        \\ \hline
+            Gauss-L n=5     & 1.502454042434692      & 128        \\ \hline
+            Gauss-L n=30    & 0.2123258113861084     & 16         \\ \hline
         \end{tabular}
         \caption{Resultados de distintos métodos de integración numérica.}
         \label{Tabla}
@@ -183,7 +184,7 @@
     \section{Conclusiones}
     Se comprobó a través de estos pasos que la interpolación por Splines Cúbicos genera no solo una curva considerablemente suave a partir de pocos datos de entrada, sino también que a partir de esta podemos aproximar el comportamiento de las componentes de la posición por separado, y que la curva que generarán ambas también será suave.\\
     \indent Además, vemos que por este método también obtenemos una expresión para las derivadas de las componente, a partir de las cuales podemos evaluar la velocidad instantánea de la partícula, además de usarla para estimar las distancia recorrida por la misma.\\
-    \indent Respecto a la estimación de la distancia, la cual requiere el cálculo de una integral, observamos una diferencia considerable en el tiempo de cómputo requerido por cada método para llegar a la precisión requerida. En el caso de las fórmulas de Newton-Cotes, se logra una mejora considerable al aumentar el grado de los polinomios interpolantes, aunque al usar una cantidad mayor de nodos no necesariamente mejoraremos el método, debido a la cantidad de evaluaciones requeridas y a la naturaleza oscilante de los polinomios. En el caso de el método de Cuadratura de Gauss este parámetro no genera gran diferencia en el tiempo de cómputo, debido a que aumentan la cantidad de evaluaciones de la función.
+    \indent Respecto a la estimación de la distancia, la cual requiere el cálculo de una integral, observamos una diferencia considerable en el tiempo de cómputo requerido por cada método para llegar a la precisión requerida. En el caso de las fórmulas de Newton-Cotes, se logra una mejora considerable al aumentar el grado de los polinomios interpolantes, aunque al considerablemente la cantidad de nodos no necesariamente mejoraremos el método de forma considerable, debido a la cantidad de evaluaciones requeridas y a la naturaleza oscilante de los polinomios, además de disminuir la estabilidad (esto lo podemos ver en la curva del residuo). En el caso de el método de Cuadratura de Gauss este parámetro no genera gran diferencia en el tiempo de cómputo, debido a que aumentan la cantidad de evaluaciones de la función.
 
     \section{Scripts Utilizados}
     \subsection{Script Cliente}
@@ -204,8 +205,13 @@
     dyn = -pi/2;
     
     % - a) Interpolacion
+    disp("========================================")
     [x,dx] = funcion_spline(tx,posx,0,0);   %velocidad inicial y final nulas en x
+    [a_x,b_x,c_x,d_x] = cubic_spline_clamped(tx,posx,0,0)
+    disp("========================================")
     [y,dy] = funcion_spline(ty,posy,pi/2,-pi/2);
+    [a_y,b_y,c_y,d_y] = cubic_spline_clamped(ty,posy,pi/2,-pi/2)
+    disp("========================================")
     
     % - b) Grafica
       % x(t) y dx(t)
@@ -235,7 +241,7 @@
     
     figure(2);
       % y(t) y dy(t)
-    t = linspace(0.001,1,50);
+    t = linspace(0,1,50);
     plot(t,y(t),'-r', 'linewidth',2);
     hold on;
     plot(t,dy(t),'-r');
@@ -333,7 +339,7 @@
     legend('integrando','NC orden 1','NC orden 2','NC orden 3','NC orden 4');
     
     % Calculo de la integral
-    tolerancia = 1e-7;
+    tolerancia = 1e-6;
     maxit = 30;
     
     [INC2,itNC2,rNC2,tNC2,LNC2] = intNC(integrando,0,6,2,tolerancia,maxit);
@@ -360,11 +366,11 @@
     tNC5
     LNC5
     
-    [INC20,itNC20,rNC20,tNC20,LNC20] = intNC(integrando,0,6,20,tolerancia,maxit);
-    INC20
-    itNC20
-    tNC20
-    LNC20
+    [INC30,itNC30,rNC30,tNC30,LNC30] = intNC(integrando,0,6,30,tolerancia,maxit);
+    INC30
+    itNC30
+    tNC30
+    LNC30
     disp("===================================");
     
     [IG2,itG2,rG2,tG2,LG2] = intGauss(integrando,0,6,2,tolerancia,maxit);
@@ -391,11 +397,11 @@
     tG5
     LG5
     
-    [IG20,itG20,rG20,tG20,LG20] = intGauss(integrando,0,6,20,tolerancia,maxit);
-    IG20
-    itG20
-    tG20
-    LG20
+    [IG30,itG30,rG30,tG30,LG30] = intGauss(integrando,0,6,30,tolerancia,maxit);
+    IG30
+    itG30
+    tG30
+    LG30
     
     % Graficar residuos
     figure(5);
@@ -404,13 +410,13 @@
     semilogy(rNC3);
     semilogy(rNC4);
     semilogy(rNC5);
-    semilogy(rNC20,'color','r','linestyle','--');
+    semilogy(rNC30,'color','r','linestyle','--');
     semilogy(rG2,'linewidth',2);
     semilogy(rG3,'linewidth',2);
     semilogy(rG4,'linewidth',2);
     semilogy(rG5,'linewidth',2);
-    semilogy(rG20,'color','r','linestyle','--');
-    legend('ResNC2', 'ResNC3', 'ResNC4', 'ResNC5', 'ResNC20', 'ResG2', 'ResG3', 'ResG4', 'ResG5', 'ResG20');
+    semilogy(rG30,'color','r','linestyle','--');
+    legend('ResNC2', 'ResNC3', 'ResNC4', 'ResNC5', 'ResNC30', 'ResG2', 'ResG3', 'ResG4', 'ResG5', 'ResG30');
     xlabel('iteraciones');
     ylabel('error absoluto');
     \end{lstlisting}

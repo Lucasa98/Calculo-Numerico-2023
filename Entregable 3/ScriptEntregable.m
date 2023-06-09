@@ -14,8 +14,13 @@ dy0 = pi/2;
 dyn = -pi/2;
 
 % - a) Interpolacion
+disp("========================================")
 [x,dx] = funcion_spline(tx,posx,0,0);   %velocidad inicial y final nulas en x
+[a_x,b_x,c_x,d_x] = cubic_spline_clamped(tx,posx,0,0)
+disp("========================================")
 [y,dy] = funcion_spline(ty,posy,pi/2,-pi/2);
+[a_y,b_y,c_y,d_y] = cubic_spline_clamped(ty,posy,pi/2,-pi/2)
+disp("========================================")
 
 % - b) Grafica
   % x(t) y dx(t)
@@ -45,7 +50,7 @@ plot(6,0,'color','g','markersize',15,'displayname','dx/dt(6)');
 
 figure(2);
   % y(t) y dy(t)
-t = linspace(0.001,1,50);
+t = linspace(0,1,50);
 plot(t,y(t),'-r', 'linewidth',2);
 hold on;
 plot(t,dy(t),'-r');
@@ -143,7 +148,7 @@ endfor
 legend('integrando','NC orden 1','NC orden 2','NC orden 3','NC orden 4');
 
 % Calculo de la integral
-tolerancia = 1e-7;
+tolerancia = 1e-6;
 maxit = 30;
 
 [INC2,itNC2,rNC2,tNC2,LNC2] = intNC(integrando,0,6,2,tolerancia,maxit);
@@ -170,11 +175,11 @@ itNC5
 tNC5
 LNC5
 
-[INC20,itNC20,rNC20,tNC20,LNC20] = intNC(integrando,0,6,20,tolerancia,maxit);
-INC20
-itNC20
-tNC20
-LNC20
+[INC30,itNC30,rNC30,tNC30,LNC30] = intNC(integrando,0,6,30,tolerancia,maxit);
+INC30
+itNC30
+tNC30
+LNC30
 disp("===================================");
 
 [IG2,itG2,rG2,tG2,LG2] = intGauss(integrando,0,6,2,tolerancia,maxit);
@@ -201,11 +206,11 @@ itG5
 tG5
 LG5
 
-[IG20,itG20,rG20,tG20,LG20] = intGauss(integrando,0,6,20,tolerancia,maxit);
-IG20
-itG20
-tG20
-LG20
+[IG30,itG30,rG30,tG30,LG30] = intGauss(integrando,0,6,30,tolerancia,maxit);
+IG30
+itG30
+tG30
+LG30
 
 % Graficar residuos
 figure(5);
@@ -214,12 +219,12 @@ hold on;
 semilogy(rNC3);
 semilogy(rNC4);
 semilogy(rNC5);
-semilogy(rNC20,'color','r','linestyle','--');
+semilogy(rNC30,'color','r','linestyle','--');
 semilogy(rG2,'linewidth',2);
 semilogy(rG3,'linewidth',2);
 semilogy(rG4,'linewidth',2);
 semilogy(rG5,'linewidth',2);
-semilogy(rG20,'color','r','linestyle','--');
-legend('ResNC2', 'ResNC3', 'ResNC4', 'ResNC5', 'ResNC20', 'ResG2', 'ResG3', 'ResG4', 'ResG5', 'ResG20');
+semilogy(rG30,'color','r','linestyle','--');
+legend('ResNC2', 'ResNC3', 'ResNC4', 'ResNC5', 'ResNC30', 'ResG2', 'ResG3', 'ResG4', 'ResG5', 'ResG30');
 xlabel('iteraciones');
 ylabel('error absoluto');
